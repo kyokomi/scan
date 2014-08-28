@@ -13,6 +13,7 @@ type Scan struct {
 	Name  string
 	Value string
 	Usage string
+	Env   string
 }
 
 // Scan terminal scan.
