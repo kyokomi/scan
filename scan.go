@@ -1,7 +1,10 @@
 // Package scan terminal input scan golang package
 package scan
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 // CliScan scans.
 type CliScan struct {
@@ -28,20 +31,22 @@ func (c *CliScan) Scan(name string) string {
 // Get result scan value.
 func (c *CliScan) Get(name string) string {
 	s := c.findScan(name)
+	if s.Value == "" {
+		s.Value = os.Getenv(s.Env)
+	}
 	return s.Value
 }
 
+func (c *CliScan) Reset(name string) {
+	c.findScan(name).Value = ""
+}
+
 func (c *CliScan) findScan(name string) *Scan {
-	var s Scan
-	for _, s = range c.Scans {
-		if s.Name == name {
-			break
+	for i := 0; i < len(c.Scans); i ++ {
+		if name != c.Scans[i].Name {
+			continue
 		}
+		return &c.Scans[i]
 	}
-
-	if s.Name != name {
-		return nil
-	}
-
-	return &s
+	return nil
 }
